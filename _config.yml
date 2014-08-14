@@ -43,7 +43,7 @@ inc:
 
   # Setup your fonts, colors etc at _assets/stylesheets/main.scss
 
-url:         http://teamnexters.github.io
+url:         http://nexters.github.io
 source:      .
 destination: ./_site
 plugins:     ./_plugins
