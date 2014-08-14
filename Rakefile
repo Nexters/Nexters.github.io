@@ -20,7 +20,7 @@ namespace :site do
 
 
   desc "Generate and publish blog to gh-pages"
-  task :publish => [:generate] do
+  task :publish do
     Dir.mktmpdir do |tmp|
       cp_r "_site/.", tmp
       Dir.chdir tmp
