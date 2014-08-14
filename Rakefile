@@ -16,6 +16,7 @@ namespace :site do
       "source"      => ".",
       "destination" => "_site"
     })).process
+    cp_r "assets", "_site/"
   end
 
 
