@@ -3,14 +3,13 @@ layout: post
 
 title: Git add commit
 subtitle: "Git 기초"
-cover_image: blog-cover.jpg
+cover_image: apple2-cover.jpg
 
 excerpt: "Git add commit - Git 기초"
 
 author:
   name: Rangen
-  twitter: rangken
-  gplus: 1234
+  github: rangken
   bio: Developer
   image: 김재영.jpg
 ---

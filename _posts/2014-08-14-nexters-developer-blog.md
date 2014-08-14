@@ -9,8 +9,7 @@ excerpt: "Git Stash - 임시 보관하기"
 
 author:
   name: Rangen
-  twitter: rangken
-  gplus: 1234
+  github: rangken
   bio: Developer
   image: 김재영.jpg
 ---
