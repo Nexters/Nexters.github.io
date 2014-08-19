@@ -2,6 +2,15 @@
 layout: base
 ---
 {% if page.cover_image %}
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&appId=187092678165992&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <div class="article-cover">
     <div class="blog-cover" style="background-image:url(/images/{{ page.cover_image }});">
       <section>
@@ -39,6 +48,9 @@ layout: base
 
         </footer>
 
+        <section>
+          <div class="fb-comments" data-href="http://nexters.github.io{{ page.url }}" data-width="530" data-numposts="5" data-colorscheme="light"></div>
+        </section>
         {% if site.inc.disqus.shortname %}
         <section>
             {% include _disqus.html %}
