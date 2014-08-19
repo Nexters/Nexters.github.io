@@ -12,7 +12,7 @@
 - jekyll serve --watch
 
 ## 올리기
-- rake site:generates
+- rake site:generate
 - rake site:publish
 
 ## Reference
