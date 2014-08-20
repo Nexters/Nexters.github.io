@@ -23,18 +23,18 @@ public static Boolean valeOf(boolean b){
 }
 {% endhighlight %}
 - Static Factory 장점
-     - 기본 생성자와는 다르게 메소드에 이름을 지어줄수 있다.
-      - 생성자에 전달되는 매개변수가 반환 객체를 잘 나타내지 못하기 때문에, 이름을 잘지은 static 팩토리 메소드가 더 좋음
+  - 기본 생성자와는 다르게 메소드에 이름을 지어줄수 있다.
+  - 생성자에 전달되는 매개변수가 반환 객체를 잘 나타내지 못하기 때문에, 이름을 잘지은 static 팩토리 메소드가 더 좋음
       - ex) **BigInteger** 클래스에서 소수를 생성하는 **probablePrime** Static 팩토리 메소드
-     - 매번 새로운 오브젝트를 생성하지 않아도 된다.
-      - imutable 불뱌ㅕㄴ 클래스의 경우 이미 생성된 인스턴스를 다시 사용할수 있다.
+  - 매번 새로운 오브젝트를 생성하지 않아도 된다.
+      - imutable 불변 클래스의 경우 이미 생성된 인스턴스를 다시 사용할수 있다.
       - ex) 싱글톤 팩토리 함수, ( *같은 클래스 생성으로 인해 equals 를 매번 오버라이딩 해주지 않고 그냥 == 로 비교가능함* )
       - ex) **Boolean.valueOf(boolean)** 함수는 매번 새로운 인스턴스를 생성하지 않는다. ( *new Boolean(true) 로 한다면 매번 새로운 객체를 생성할 것이다.* )
-     - 자신이 반환하는 타입의 어떤 서브 타입 객체도 리턴 가능함
+  - 자신이 반환하는 타입의 어떤 서브 타입 객체도 리턴 가능함
       - ex) **Interface-Based framework, Java Collection Framework interface** - EnumSet 크기가 커지면 내부적으로 EnumSet 을 상속시킨 JumboEnumSet 을 팩토리 메소드에서 생성해서 알아서 리턴해줌
       - ex) **Service Provider framework** 클래스가 작성되는 시점에 그 메소드로 부터 반환되는 객체의 클래스가 존재하지 않아도 된다.
-     - 생성자에 호출시에 타입 추론처리는 1.6에서는 안된다. 1.8은 되나??
-     - 생성자에 변수 타입을 일일이 입력해주어야 하는 불편함을 줄여줄수 있다.
+  - 생성자에 호출시에 타입 추론처리는 1.6에서는 안된다. 1.8은 되나??
+  - 생성자에 변수 타입을 일일이 입력해주어야 하는 불편함을 줄여줄수 있다.
 {% highlight java  %}
 Map<Strng, List<String>> = new HashMap<String, List<String>>();
 // 아래 처럼 사용 가능하도록!
