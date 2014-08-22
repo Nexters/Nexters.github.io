@@ -30,6 +30,7 @@ author:
 - 인스턴스가 갖는 값을 비교하여 논리적으로 같은지 판단할 필요가 있는 클래스로써, 자신의 수퍼클래스에서
 equals 메소드를 오버라이드 하지 않았을 경우
 - equals 메소드를 오버라이드 할 때는 이 메소드의 보편적 계약을 따라야 한다. equals 메소드는 equivalence relation 을 구현하며 그것은
+
   - **Reflexive** : null이 아닌 모든 참조 값 x에 대해, x.equals(x)는 반드시 true를 반환해야 한다.
   - **Symmetric** : null이 아닌 모든 참조 값 x와 y에 대해, y.equals(x)가 true를 반환한다면 x.equals(y)도 반드 시 true를 반환해야 한다.
   - **Transitive**: null이 아닌 모든 참조 값 x와 y에 대해, x.equals(y)가 true를 반환하고 y.equals(z)가 true를 반환한다면 x.equals(z)도 true를 반환해야 한다.
