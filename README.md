@@ -7,6 +7,7 @@
     - 루비깔면 될듯...?
 
 ## 작성방법
+0. git checkout master **현재 브랜치가 master 인지 확인**!!! 
 1. _posts 폴더에 년도-월-날짜-제목.md 파일을 만든다. ex) 2014-08-14-내용.md
 2. jekyll serve --watch 를 입력해서 서버를 킨다.
 3. 내용을 계속 작성
