@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oracle dbstart ORACLE_HOME_LISTNER problem &mdash; Nexters</title>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/images/logo.png"/>
+    <link href="/feed.xml" rel="alternate" type="application/rss+xml" title="Nexters" />
+    <meta name="title" content="oracle dbstart ORACLE_HOME_LISTNER problem ">
+    <link rel="canonical" href="http://nexters.github.io/2014/08/19/oracle-dbstart-ORACLE_HOME_LISTNER-problem/">
+    
+    <link rel="author" href="https://plus.google.com/1234">
+    <meta property="og:title" content="oracle dbstart ORACLE_HOME_LISTNER problem "/>
+    <meta property="og:url" content="http://nexters.github.io/2014/08/19/oracle-dbstart-ORACLE_HOME_LISTNER-problem/"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/blog-cover.jpg"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/logo.png"/>
+    
+    
+    <meta property="og:description" content="Oracle: dbstart – ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener"/>
+    <meta name="description" content="Oracle: dbstart – ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener"/>
+    
+    <meta property="og:site_name" content="Nexters">
+</head>
+<body>
+
+<section class="site-nav">
+    <header>
+        <nav id="navigation">
+            <a class="brand" href="/">
+                <img src="/images/logo.png" alt="Inc">
+            </a>
+            <a href="/" class="home">Blog</a>
+            <a href="http://teamnexters.com/product/">Product</a>
+            <a href="http://teamnexters.com/members/">About</a>
+            <a href="http://nexters.github.io/Node-Study/">Node.js</a>
+            <a href="http://rangken.gitbooks.io/nextersstudy1/">C/S Study</a>
+            <a href="http://rangken.gitbooks.io/javastudy/content/chapter2/README.html">Java Study</a>
+        </nav>
+        <nav class="tagline">
+            <span></span>
+            <a href="https://github.com/orgs/Nexters/dashboard" class="btn btn-outline">Team Project</a>
+        </nav>
+    </header>
+</section>
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&appId=187092678165992&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="article-cover">
+    <div class="blog-cover" style="background-image:url(/images/blog-cover.jpg);">
+      <section>
+        <h1>oracle dbstart ORACLE_HOME_LISTNER problem</h1>
+        <h3>ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener</h3>
+        <img src="/images/오승목.jpg" style="width: 64px; height: 64px;">
+      </section>
+    </div>
+</div>
+
+<article>
+
+    <div class="container">
+        <header>
+            <div class="meta">
+                By <address><a rel="author" href="" title="오승목" target="_blank">오승목</a></address> &mdash;
+                <time pubdate datetime="2014-19-August" title="August 19, 2014">August 19, 2014</time>
+            </div>
+            <h1 class="title">oracle dbstart ORACLE_HOME_LISTNER problem</h1>
+            <h2 class="subtitle">ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener</h2>
+        </header>
+
+        <section>
+            <p>오라클을 작동하기 위해 dbstart명령어를 실행하면 아래와 같은 오류가 난다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>oracle@fs ~<span class="o">]</span><span class="nv">$ </span>dbstart
+ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener
+Usage: /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1/bin/dbstart ORACLE_HOME</code></pre></div>
+
+<p>ORACLE_HOME_LISTNER환경변수가 설정되어 있지 않은것 같아 다음과 같이 설정해봤다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>oracle@fs ~<span class="o">]</span><span class="nv">$ </span><span class="nb">export </span><span class="nv">ORACLE_HOME_LISTNER</span><span class="o">=</span><span class="nv">$ORACLE_HOME</span></code></pre></div>
+
+<p>그리고 다시 실행해 보면</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>oracle@fs ~<span class="o">]</span><span class="nv">$ </span>dbstart
+ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener
+Usage: /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1/bin/dbstart ORACLE_HOME</code></pre></div>
+
+<p>똑같이 에러가 난다.</p>
+
+<p>해결방법은?
+파라미터로 환경변수를 넣어준다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>oracle@fs ~<span class="o">]</span><span class="nv">$ </span>dbstart <span class="nv">$ORACLE_HOME</span></code></pre></div>
+
+<p>출처 : http://www.markhneedham.com/blog/2012/01/26/oracle-dbstart-oracle_home_listner-is-not-set-unable-to-auto-start-oracle-net-listener/</p>
+
+            
+<div class="social">
+    
+    
+    <div>
+        <div class="fb-like" data-width="150" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+        </section>
+
+        <footer>
+            <address>
+               <img src="/images/오승목.jpg">
+                <p>Written by <strong><a rel="author" href="https://github.com/" title="" target="_blank">오승목</a></strong><br>
+                <span class="muted">Developer</span>
+                </p>
+            </address>
+
+        </footer>
+
+        <section>
+          <div class="fb-comments" data-href="http://nexters.github.io/2014/08/19/oracle-dbstart-ORACLE_HOME_LISTNER-problem/" data-width="700" data-numposts="5" data-colorscheme="light"></div>
+        </section>
+        
+    </div>
+</article>
+
+
+<footer class="site-footer">
+    <div class="container">
+        &copy; 2015
+
+        <nav>
+            <a href="http://teamnexters.com/">Nexters</a> &middot;
+            <a href="/">Blog</a> &middot;
+            <a href="http://teamnexters.com/product/">Product</a> &middot; 
+            <a href="http://teamnexters.com/members/">About</a>
+        </nav>
+
+        <nav class="social">
+            
+            
+            <a href="http://facebook.com/Nexterspage" title="Follow on Facebook" target="_blank"><i class="icon icon-facebook black"></i></a>
+            
+            <a href="/feed.xml" title="RSS Feed">
+                <i class="icon icon-rss black"></i>
+            </a>
+        </nav>
+    </div>
+</footer>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/main.js">
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=253595308025739";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,573 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <link>http://nexters.github.io</link>
+    <atom:link href="http://nexters.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <description></description>
+    <language>en-us</language>
+    <pubDate>Mon, 12 Jan 2015 02:02:57 +0000</pubDate>
+    <lastBuildDate>Mon, 12 Jan 2015 02:02:57 +0000</lastBuildDate>
+
+    
+    
+    <item>
+      <title>Effective Java 모든 객체에 공통적인 메소드</title>
+      <link>http://nexters.github.io/2014/08/20/effective-java-2/</link>
+      <pubDate>Wed, 20 Aug 2014 00:00:00 +0000</pubDate>
+      <author></author>
+      <guid>http://nexters.github.io/2014/08/20/effective-java-2</guid>
+      <description>&lt;h2 id=&quot;section&quot;&gt;모든 객체에 공통적인 메소드!&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Object 클래스는 상속을 목적으로 설계되었다. 이 클래스에는 (equals, hashcode, toString, clone, finalize) 와 같은 메소드들이 Object의 모든 서브 클래스에서 오버라이드하도록 설계되었다.
+이 장에서는 final이 아닌 Object의 메소드들을 언제 어떻게 오버라이드 하는지 알려준다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;item-8-equals-------&quot;&gt;Item 8. equals 메소드를 오버라이딩 할 때는 보편적 계약을 따르자.&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;equals 메소드는 오버라이딩을 하는 과정에서 문제가 발생할 수 있다. 이런 부분을 가장 쉽게 피하는 방법은 상속받은 그대로 사용하는 것이다. 다음 조건 중 어느 하나라도 만족하면 그렇게 하는 것이 좋다.
+    &lt;ul&gt;
+      &lt;li&gt;클래스의 각 인스턴스가 본래부터 유일한 경우&lt;/li&gt;
+      &lt;li&gt;두 인스턴스가 논리적으로 같은지 검사하지 않아도 되는 클래스의 경우&lt;/li&gt;
+      &lt;li&gt;수퍼 클래스에서 equals 메소드를 이미 오버라이딩 했고, 그 메소드를 그대로 사용해도 좋은 경우&lt;/li&gt;
+      &lt;li&gt;private이나 package-private(접근 지시자를 지정하지 않은 경우) 클래스라서 이 클래스의 equals 메소드가 절대 호출되지 않아야 할 경우&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;그렇다면 Object.equals를 언제 오버라이드 해야 좋을까?&lt;/strong&gt;
+- 인스턴스가 갖는 값을 비교하여 논리적으로 같은지 판단할 필요가 있는 클래스로써, 자신의 수퍼클래스에서
+equals 메소드를 오버라이드 하지 않았을 경우
+- equals 메소드를 오버라이드 할 때는 이 메소드의 보편적 계약을 따라야 한다. equals 메소드는 equivalence relation 을 구현하며 그것은&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Reflexive&lt;/strong&gt; : null이 아닌 모든 참조 값 x에 대해, x.equals(x)는 반드시 true를 반환해야 한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Symmetric&lt;/strong&gt; : null이 아닌 모든 참조 값 x와 y에 대해, y.equals(x)가 true를 반환한다면 x.equals(y)도 반드 시 true를 반환해야 한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Transitive&lt;/strong&gt;: null이 아닌 모든 참조 값 x와 y에 대해, x.equals(y)가 true를 반환하고 y.equals(z)가 true를 반환한다면 x.equals(z)도 true를 반환해야 한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Consistent&lt;/strong&gt;: null이 아닌 모든 참조 값 x와 y에 대해, equals 메소드에서 객체 비교 시 사용하는 정보가 변경되지 않는다면, x.equals(y)를 여러 번 호출하더라도 일관성 있게 true 또는 false를 반환해야 한다.! • null 아닌 모든 참조 값 x에 대해, x.equals(null)은 반드시 false를 반환해야 한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;item-9-equals-----hashcode-----&quot;&gt;Item 9. equals 메소드를 오버라이드 할 때는 hashCode 메소드도 항상 같이 오버라이드 하자.!&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;hashCode 메소드를 제대로 오버라이드 하지 않아 코드 결함이 생기는 경우가 흔하다. 그렇게 하지 않으면 HashMap과 HashSet 등 모든 해시 기반의 컬렉션들과 우리 클래스를 같이 사용할 때 우리 클래스가 올바르게 동작하지 않을 것이다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;자바 API문서의 주요 사항은 다음과 같다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;애플리케이션이 실행 중에 같은 객체에 대해 한 번 이상 호출되더라도 hashCode 메소드는 같은 정수를 일관 성 있게 반환해야 한다.&lt;/li&gt;
+  &lt;li&gt;equals(Object) 메소드 호출결과 두 객체가 동일하다면, 두 객체 각각에 대해 hashCode 메소드를 호출 했을 때 같은 정수 값이 나와야 한다. (주요 위배사항)&lt;/li&gt;
+  &lt;li&gt;equals(Object) 메소드 호출결과 두 객체가 다르다고 해서 두 객체 각각에 대해 hashCode 메소드를 호출 했 !을 때 반드시 다른 정수 값이 나올 필요는 없다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;좋은 해시 메소드는 동일하지 않은 객체들에 대해 서로 다른 해시코드를 만든다. 이상적으로는 동일하지 않은 인 스턴스들에 대해 모든 가능한 해시 값을 고르게 분산시켜주어야 한다.&lt;/p&gt;
+</description>
+    </item>
+    
+    
+    
+    <item>
+      <title>Effective Java 객체의 생성과 호출</title>
+      <link>http://nexters.github.io/2014/08/20/effective-java-1/</link>
+      <pubDate>Wed, 20 Aug 2014 00:00:00 +0000</pubDate>
+      <author></author>
+      <guid>http://nexters.github.io/2014/08/20/effective-java-1</guid>
+      <description>&lt;h3 id=&quot;item1----static---&quot;&gt;Item1 : 기본 생성자보다 Static 팩토리 메소드를 만들어라.&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;클래스의 인스턴스(instance) 을 생성하도록 하는 일반적인 방법은 public 생성자(constructor)을 제공하는 것이다.&lt;/li&gt;
+  &lt;li&gt;boolean primitive 값을 가져와서 Boolean 객체 참조로 변환하여 반환하는 Static Factory&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;valeOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;TRUE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Static Factory 장점
+    &lt;ul&gt;
+      &lt;li&gt;기본 생성자와는 다르게 메소드에 이름을 지어줄수 있다.&lt;/li&gt;
+      &lt;li&gt;생성자에 전달되는 매개변수가 반환 객체를 잘 나타내지 못하기 때문에, 이름을 잘지은 static 팩토리 메소드가 더 좋음
+        &lt;ul&gt;
+          &lt;li&gt;ex) &lt;strong&gt;BigInteger&lt;/strong&gt; 클래스에서 소수를 생성하는 &lt;strong&gt;probablePrime&lt;/strong&gt; Static 팩토리 메소드&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;매번 새로운 오브젝트를 생성하지 않아도 된다.
+        &lt;ul&gt;
+          &lt;li&gt;imutable 불변 클래스의 경우 이미 생성된 인스턴스를 다시 사용할수 있다.&lt;/li&gt;
+          &lt;li&gt;ex) 싱글톤 팩토리 함수, ( &lt;em&gt;같은 클래스 생성으로 인해 equals 를 매번 오버라이딩 해주지 않고 그냥 == 로 비교가능함&lt;/em&gt; )&lt;/li&gt;
+          &lt;li&gt;ex) &lt;strong&gt;Boolean.valueOf(boolean)&lt;/strong&gt; 함수는 매번 새로운 인스턴스를 생성하지 않는다. ( &lt;em&gt;new Boolean(true) 로 한다면 매번 새로운 객체를 생성할 것이다.&lt;/em&gt; )&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;자신이 반환하는 타입의 어떤 서브 타입 객체도 리턴 가능함
+        &lt;ul&gt;
+          &lt;li&gt;ex) &lt;strong&gt;Interface-Based framework, Java Collection Framework interface&lt;/strong&gt; - EnumSet 크기가 커지면 내부적으로 EnumSet 을 상속시킨 JumboEnumSet 을 팩토리 메소드에서 생성해서 알아서 리턴해줌&lt;/li&gt;
+          &lt;li&gt;ex) &lt;strong&gt;Service Provider framework&lt;/strong&gt; 클래스가 작성되는 시점에 그 메소드로 부터 반환되는 객체의 클래스가 존재하지 않아도 된다.&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;생성자에 호출시에 타입 추론처리는 1.6에서는 안된다. 1.8은 되나??&lt;/li&gt;
+      &lt;li&gt;생성자에 변수 타입을 일일이 입력해주어야 하는 불편함을 줄여줄수 있다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Strng&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;();&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 아래 처럼 사용 가능하도록!&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;K&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;K&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;newInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HashMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;K&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;V&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Static Factory 단점
+    &lt;ul&gt;
+      &lt;li&gt;인스턴스 생성을 위해 static 팩토리 메소드만 갖고 있으면서 public이나 protected 생성자가 없는 클래스의 경우는 서브 클래스를 가질 수 없다&lt;/li&gt;
+      &lt;li&gt;다른 여러 스태틱 메소드랑 구별하기 쉽지 않고 코드를 읽기도 쉽지 않음 ~~javadoc 으로 문서화를 잘하고 함수명 convention 을 잘지키면됨~~&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Static Factory Convention : 아래 함수들은 Static Fatory로 사용된다고 규약을 정한다.
+    &lt;ul&gt;
+      &lt;li&gt;valueOf : 파라메터와 같은 값을 리턴하는.&lt;/li&gt;
+      &lt;li&gt;of&lt;/li&gt;
+      &lt;li&gt;getInstance&lt;/li&gt;
+      &lt;li&gt;newInstance&lt;/li&gt;
+      &lt;li&gt;getType&lt;/li&gt;
+      &lt;li&gt;newType&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Static 팩토리 메소드를 먼저 고려해보고 무심코 public 생성자를 만드는 습관을 버려라.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;item2-------&quot;&gt;Item2 : 생성자의 매개변수가 많을때는 차라리 빌더를 만들어라.&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;많은 변수를 가지면 Static Factory 나 생성자나 모든 초기화 함수를 만들어 주는데(&lt;em&gt;telescoping construntor&lt;/em&gt;)는 한계가 있다.&lt;/li&gt;
+  &lt;li&gt;생성자를 간단하게 만들기 위한 방법으로는 Setter 메소드를 만들어주는 &lt;em&gt;JavaBean&lt;/em&gt; 패턴이 있다. 초기화를 한후에 setter 로 값을 다 넣어준다.
+    &lt;ul&gt;
+      &lt;li&gt;여러번의 메소드 호출로 나누어져 인스턴스가 생성되서 생성과정을 거치는동안 일관된 상태가 유지 되지 못함. ( &lt;em&gt;모든 초기화가 이루어지기전에 다른 Thread 에서 사용해버릴수도 있다&lt;/em&gt; )&lt;/li&gt;
+      &lt;li&gt;immutable 클래스를 만들수 없어진다. 즉 Thread 안정성을 유지 할수가없다. 물론 객체를 freeze 하는 함수를 사용할수 있지만 런타임 에러를 만들어 낼 가능성이 있다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;java 1.5 이상을 쓴다면 기본 Bulder&lt;t&gt; 인터페이스가 존재한다.&lt;/t&gt;&lt;/li&gt;
+  &lt;li&gt;빌더를 사용하면 생성자에는 사용할수없는 가변인자(&lt;em&gt;varargs&lt;/em&gt;) 를 사용할수 있다.&lt;/li&gt;
+  &lt;li&gt;Class 클래스에는 newInstance 라는 추상 팩토리 메소드가 있는데 newInstance 는 항상 객체가 생성될때 클래스의 매개변수가 없는 생성자를 호출하려고 한다. 만약에 그런 생성자가 클래스에 없다면 컴파일 에러가 발생하지 않고 런타임 에러(&lt;em&gt;Instantiation-Exception, IllegalAccessException&lt;/em&gt;) 이 발생하므로 컴파일 시점에서 예외 검사를 어렵게 만든다. 빌더를 사용하면 이런 위험을 줄일수 있다.&lt;/li&gt;
+  &lt;li&gt;빌더 패턴은 추가적으로 빌더를 생성해야 하므로 생성 비용이 드는 단점이 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Builder Pattern&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;NutritionFacts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servingSize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calories&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sodium&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;carbohydrate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Builder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Required parameters&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servingSize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// Optional parameters - initialized to default values&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calories&lt;/span&gt;      &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fat&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;carbohydrate&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sodium&lt;/span&gt;        &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servingSize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;servingSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servingSize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;servings&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;calories&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calories&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;           &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;carbohydrate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;carbohydrate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sodium&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sodium&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NutritionFacts&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;NutritionFacts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;NutritionFacts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;servingSize&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;servingSize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;servings&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;servings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;calories&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;calories&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 사용&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;NutritionFacts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cocaCola&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NutritionFacts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;240&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calories&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sodium&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;35&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;carbohydrate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;27&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Builder 는 매개변수가 많이 늘어나거나 가변인자를 사용할 경우 고려해보자. telescoping 방법보다 가독성이 좋고 JavaBeans 보다는 휠씬 안전하다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;item3-----private----enum---&quot;&gt;Item3 : 싱글톤 만들때 생성자를 Private 로 해야하고 혹은 enum타입을 통해 만들면 좋다.&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;생성자를 private 로 만들어서 해당 클래스 외부에서 따로 생성하지 못하도록 해야함&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Elvis&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Elvis&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;INSTANCE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Elvis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// static final!!&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ElvisO&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// private 생성자!!&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;leaveTheBuilding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;enum 싱글톤을 사용하는 이유?
+    &lt;ul&gt;
+      &lt;li&gt;enum 없이 싱글톤을 만들면 reflection 을 통해서는 instance 생성자에 접근할수가 있다.&lt;/li&gt;
+      &lt;li&gt;싱글톤에서 serializable 을 사용하려면 instance 변수는 transient 로 선언해야 한다. 매번 deserialize 할때마다 instance 에 새로운값이 생성될수 있으므로 transient 를 통해 serialize 할때 제외하도록 설정해 주어야한다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;java 1.5 이상을 사용하면 enum 을 통해서 싱글톤을 구현하면 좋다. 여러번 초기화 오브젝트가 생성되거나 serialization, reflection attack 등에 상관없이 구현가능하다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Elvis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+     &lt;span class=&quot;n&quot;&gt;INSTNACE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+     &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;
+     &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;leaveTheBuilding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ccc&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// INSTANCE.test 도 가능.&lt;/span&gt;
+     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;enum 방식에 싱글톤은 널리 적용되어 있지 않다. 개인적으로도 Serialize 문제가 아니라면 구지 사용할 필요가 없다고 생각된다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;item4--private----&quot;&gt;ITEM4 : PRIVATE 생성자로 인스턴스를 생성할수 없게하라.&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;java.lang.math 나 java.util.array 같은 util 클래스는 인스턴스가 생성되도록 하면 안되므로 생성자를 piravte 로 선언하면 인스턴스가 생성되는것을 막을수 있다.&lt;/li&gt;
+  &lt;li&gt;기본적으로 생성자를 만들지 않아도 자바 컴파일러가 기본 생성자를 만들기 때문에 명시적으로 private 생성자를 선언해주어야한다.&lt;/li&gt;
+  &lt;li&gt;추상 클래스를 사용해서 인스턴스를 생성하지 못하도록 하는 방법을 사용하면 안된다. 추상 클래스를 상속해서 인스턴스를 생성 할 수 도 있고 클래스가 마치 상속을 위해 생성된거처럼 잘못 알게된다.&lt;/li&gt;
+  &lt;li&gt;private 생성자를 만들면 subclass 를 만들수 없으므(&lt;em&gt;컴파일 에러 발생&lt;/em&gt;)로 항상좋은건 아니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UtilityClass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 디폴트 생성자가 만들어지는것을 방지&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;UtilityClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 혹시나 불러질 가능성 대비해서 (클래스 내부에서) 에러 발생&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;AssertionError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;item5-----&quot;&gt;ITEM5 : 필요없는 오브젝트가 생성되는것을 피해라&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Immutable 객체는 항상 재사용이 가능함!!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 매번 새로운 객체 생성&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;abc&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// &amp;quot;abc&amp;quot; 스트링 풀에서 공부&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;valueOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 새로운 인스턴스를 생성하지 않지만&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 생성자는 새로운 인스턴스를 생성&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Static 팩토리를 사용하는것이 좋다.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;가변 객체도 객체의 상태가 변경되지 않는다면 static{ } 블락에서 초기화 한후 재사용하자.자주 호출되는  함수에서 매번 객체를 생성하는 일은 하지 않는게 좋다.&lt;/li&gt;
+  &lt;li&gt;immutable object 는 매번 인스턴스를 만들지 말고 static 블록에서 초기화한후 공유해서 사용해야 한다.&lt;/li&gt;
+  &lt;li&gt;Map 에 keySet 함수도 매번 새로운 Set를 만들어서 리턴하지 않고 매번 같은 인스턴스를 리턴함.&lt;/li&gt;
+  &lt;li&gt;java 1.5 이상에서 제공하는 autoboxing 이 일어나지 않도록 해라 Long 과 primitive long 간에 boxing 이 일어나면 추가적인 오버헤드가 발생한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0L&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ong&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Integer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;MAX_VALUE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// autoboxing 일어남.&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;item6---object-refreences--&quot;&gt;ITEM6 : 쓸모없는 Object refreences 를 없애라&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;자바는 C/C++ 과는 다르게 더이상 참조되지 않으면 객체들이 사용하던 메모리가 자동으로 회수된다. &lt;strong&gt;마법은 아니므로 주의!&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pop&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;EmptyStackException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;elements&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 쓸모없는 reference 를 제거해주어야한다.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;null 처리를 해주면 참조를 제거해서 메모리에서 사라지도록 할수있고, 잘못된 참조로 원하지 않게 작동하지 않고 NullPointerException 이 바로 일어나도록 할수있다.&lt;/li&gt;
+  &lt;li&gt;클래스가 자기자신의 메모리를 관리할때 프로그래머가 메모리 릭에 대해 조심해야한다. 특정 element 가 free 되면 object reference 들은 모두 null 처리가 되어져야 한다.&lt;/li&gt;
+  &lt;li&gt;캐쉬 상황에서 메모리 릭이 발생하기 쉽다. 캐쉬 외부에 캐쉬의 키에 대한 참조가 있을 동안만 캐시에 저장된 항목이 유효한 캐쉬를 구현해야한다. WeakHasMap을 캐시로 사용하면 key값의 외부 참조에 따라 결정되도록 할수있다. (&lt;em&gt;weak reference&lt;/em&gt;)&lt;/li&gt;
+  &lt;li&gt;콜백과 리스너에서도 메모리릭이 발생하기 쉽다. 명시적으로 콜백을 deregister 시키지 말고 weak reference 를 사용하거나 키값들을 weakHashMap 을 사용해 저장하라.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;item7--finalizer--&quot;&gt;ITEM7 : finalizer 사용하지 마라.&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Java의 finalizer 는 C++ 의 소멸자가 아니다!&lt;/li&gt;
+  &lt;li&gt;신속하게 실행된다는 보장이 없다.&lt;/li&gt;
+  &lt;li&gt;혹시나 사용할경우 : 생성된 객체를 종료하는 메소드 호출이 재대로 동작하지 않을경우에 대한 대비 ex) FileInputStream, Timer, Connection 에는 finalizer 가 있다.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    
+    
+    <item>
+      <title>ORA-01034, ORA-27101 problem</title>
+      <link>http://nexters.github.io/2014/08/19/oracle_ORA-01034_ORA-27101/</link>
+      <pubDate>Tue, 19 Aug 2014 00:00:00 +0000</pubDate>
+      <author></author>
+      <guid>http://nexters.github.io/2014/08/19/oracle_ORA-01034_ORA-27101</guid>
+      <description>&lt;p&gt;오라클 접속이 안된다.&lt;/p&gt;
+
+&lt;p&gt;에러메세지를 보면 오라클이 제대로 떠있지 않은 상태다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ORA-01034: ORACLE not available
+ORA-27101: shared memory realm does not exist
+Linux-x86_64 Error: 2: No such file or directory
+01034. &lt;span class=&quot;m&quot;&gt;00000&lt;/span&gt; -  &lt;span class=&quot;s2&quot;&gt;&amp;quot;ORACLE not available&amp;quot;&lt;/span&gt;
+*Cause:    Oracle was not started up. Possible causes include the following
+           - The SGA requires more space than was allocated &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; it.
+           - The operating-system variable pointing to the instance is
+           improperly defined.
+*Action:   Refer to accompanying messages &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; possible causes and correct
+           the problem mentioned in the other messages.
+           If Oracle has been initialized, &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; on some operating systems,
+           verify that Oracle was linked correctly. See the platform
+           specific Oracle documentation.
+Vendor code 1034
+
+Status : Failure -Test failed: ORA-01034: ORACLE not available
+ORA-27101: shared memory realm does not exist
+Linux-x86_64 Error: 2: No such file or directory&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;먼저 TNS리스너 설정을 확인한다.&lt;/p&gt;
+
+&lt;p&gt;환경변수 ORACLE_SID를 확인한다.&lt;/p&gt;
+
+&lt;p&gt;사용하는 sid가 orcl일 때 다음과 같다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;oracle@fs ~&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ORACLE_SID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;orcl&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;listener.ora 파일을 설정한다.&lt;/p&gt;
+
+&lt;p&gt;SID_NAME과 ORACLE_HOME을 자신의 설정과 맞게 변경한다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;SID_LIST_LISTENER&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SID_LIST&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SID_DESC&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SID_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; orcl&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ORACLE_HOME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;ORATAB환경변수를 확인한다.
+기본은 /etc/oratab 이 파일이다.&lt;/p&gt;
+
+&lt;p&gt;SID이름:DB경로:Y나N 형식이다.&lt;/p&gt;
+
+&lt;p&gt;SID이름이 orcl이고
+DB경로가 /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1 일 때 설정값은 다음과 같다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;orcl:/home/oracle/u01/app/oracle/product/11.2.0/dbhome_1:Y&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;이제 dbstart 스크립트로 오라클을 실행한다!&lt;/p&gt;
+
+&lt;p&gt;출처 : &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.markhneedham.com/blog/2012/01/26/oracle-dbstart-oracle_home_listner-is-not-set-unable-to-auto-start-oracle-net-listener&quot;&gt;http://www.markhneedham.com/blog/2012/01/26/oracle-dbstart-oracle_home_listner-is-not-set-unable-to-auto-start-oracle-net-listener&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://totoriver.egloos.com/3104522&quot;&gt;http://totoriver.egloos.com/3104522&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;dbstart스크립트 참고.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;나머지 까먹음…&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+    </item>
+    
+    
+    
+    <item>
+      <title>oracle dbstart ORACLE_HOME_LISTNER problem</title>
+      <link>http://nexters.github.io/2014/08/19/oracle-dbstart-ORACLE_HOME_LISTNER-problem/</link>
+      <pubDate>Tue, 19 Aug 2014 00:00:00 +0000</pubDate>
+      <author></author>
+      <guid>http://nexters.github.io/2014/08/19/oracle-dbstart-ORACLE_HOME_LISTNER-problem</guid>
+      <description>&lt;p&gt;오라클을 작동하기 위해 dbstart명령어를 실행하면 아래와 같은 오류가 난다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;oracle@fs ~&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dbstart
+ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener
+Usage: /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1/bin/dbstart ORACLE_HOME&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;ORACLE_HOME_LISTNER환경변수가 설정되어 있지 않은것 같아 다음과 같이 설정해봤다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;oracle@fs ~&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ORACLE_HOME_LISTNER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ORACLE_HOME&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;그리고 다시 실행해 보면&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;oracle@fs ~&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dbstart
+ORACLE_HOME_LISTNER is not SET, unable to auto-start Oracle Net Listener
+Usage: /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1/bin/dbstart ORACLE_HOME&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;똑같이 에러가 난다.&lt;/p&gt;
+
+&lt;p&gt;해결방법은?
+파라미터로 환경변수를 넣어준다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;oracle@fs ~&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dbstart &lt;span class=&quot;nv&quot;&gt;$ORACLE_HOME&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;출처 : http://www.markhneedham.com/blog/2012/01/26/oracle-dbstart-oracle_home_listner-is-not-set-unable-to-auto-start-oracle-net-listener/&lt;/p&gt;
+</description>
+    </item>
+    
+    
+    
+    <item>
+      <title>Git Stash</title>
+      <link>http://nexters.github.io/2014/08/14/nexters-developer-blog/</link>
+      <pubDate>Thu, 14 Aug 2014 00:00:00 +0000</pubDate>
+      <author></author>
+      <guid>http://nexters.github.io/2014/08/14/nexters-developer-blog</guid>
+      <description>&lt;h1 id=&quot;git-stash&quot;&gt;Git Stash&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;$ git stash&lt;/code&gt;는 워킹 디렉토리에 &lt;code&gt;Unstaged - git add 는 수행됨&lt;/code&gt; 파일들을 백업하고 워킹디렉토리를 &lt;code&gt;HEAD - 이전 커밋&lt;/code&gt; 상태로 만드는 명령이다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;수정중인 상태를 임시 저장해두고 이전 커밋으로 되돌리기 (커밋을 하거나 브랜치를 만들어서 보관할수 있으나 현재 수정중인 상태라서 따로 커밋 브랜치가 애매한상황)&lt;/li&gt;
+  &lt;li&gt;현재 브랜치에 작업한 사항을 다른 브랜치로 옮기거나&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code&gt;$ git stash&lt;/code&gt; - 현재 수정중인 상태에서 이전 HEAD 의 커밋 상태로 돌아감&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ git stash pop&lt;/code&gt; - Stash로 임시 저장했던 상태로 되돌린다. 저장된 스택중에 가장 위에 있는것 최신에 Push 된 상태로 돌아간다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ git stash list&lt;/code&gt; - 현재 stash(임시 보관)되어진 리스트를 보여줌&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ git stash save NAME&lt;/code&gt; - 해당 이름으로 git stash 를 수행 (구별하기 위한 메세지를 지정해주는것 이다.)&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ git stash apply stash@{0}&lt;/code&gt; - Stash 이름들은 기본적으로 stash@{0} stash@{1} stash@{2} 이런식으로 지정된다. 해당 이름으로 상태를 돌릴수있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ git stash drop stash@{0}&lt;/code&gt; - 저장된 Stash중 해당 이름으로 되어 있는 것을 삭제한다. 생략하면 맨위에 Push 된것을 삭제한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;$ git stash clear&lt;/code&gt; - 모든 Stash 리스트 들을 삭제한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;git-stash-merge&quot;&gt;Git Stash Merge&lt;/h1&gt;
+&lt;p&gt;Git Stash 가 무조건 임시 보관 상태로 돌리는것이 아니고 해당 파일을 수정후에 Stash 하기 전 상태와 머지를 수행한다.
+Stash 하기전 상태와 Stash한 후에 파일이 Conflict 가 나는 경우가 있을수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;error: Your &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;changes to the following files would be overwritten by merge:
+  file1
+Please, commit your changes or stash them before you can merge.
+Aborting&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;git stash&lt;/code&gt; 를 수행한후에 파일을 수정한다음 &lt;code&gt;git stash pop&lt;/code&gt; 으로 돌아가려고 할때 Conflict 이 발생한다면 &lt;code&gt;git commit&lt;/code&gt; 을 수행한후에
+&lt;code&gt;git stash pop&lt;/code&gt; 을 수행한다. 그러면 Conflict 가 발생하고 해당 사항들을 모두 Merge 해주어야 한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;git-stash--&quot;&gt;Git Stash 브랜치 바꾸기&lt;/h1&gt;
+&lt;p&gt;가끔 잘못된 브랜치에 작업을 하고 있을 경우가 있다. 작업한 브랜치에 내용을 내가 원하는 브랜치로 적용하고 싶을때 Git stash 를 사용할 수 있다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;현재 브랜치에서 작업 된 사항을 모두 &lt;code&gt;git add .&lt;/code&gt; 를 수행해 Unstaged 상태로 만들어 준다.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;git checkout name&lt;/code&gt; 내가 원하는 브랜치로 이동한다.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;git stash pop&lt;/code&gt; stash로 저장한 상태로 돌려준다.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;git commit&lt;/code&gt; 해당 브랜치에 커밋해준다.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;git checkout master&lt;/code&gt; &lt;code&gt;git checkout -- .&lt;/code&gt; 추가적으로 master 브랜치의 수정사항을 모두 원상태로 돌려준다. &lt;code&gt;git reset --hard HEAD~1&lt;/code&gt;을 수행해
+   주어도 된다. –hard 옵션을 줄경우 모든 수정 내용이 사라질수 있으니 조심해야 한다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&quot;reference&quot;&gt;Reference&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;http://wit.nts-corp.com/2014/03/25/1153&quot;&gt;JK.Lee&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    
+    
+    <item>
+      <title>Git add commit</title>
+      <link>http://nexters.github.io/2014/08/14/git-add-and-git-commit/</link>
+      <pubDate>Thu, 14 Aug 2014 00:00:00 +0000</pubDate>
+      <author></author>
+      <guid>http://nexters.github.io/2014/08/14/git-add-and-git-commit</guid>
+      <description>&lt;h2 id=&quot;git--br&quot;&gt;Git 기초 &lt;br /&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/images/git_status.png&quot; alt=&quot;GIT STATUS&quot; /&gt;
+&lt;br /&gt;
+Git 은 기본적으로 각 파일의 상태를 가지고 있다.
+git status 명령어를 이용해 해당 파일들의 Status 를 알수 있다.&lt;/p&gt;
+
+&lt;p&gt;Untracked : 아직 git 에 등록되지 않은 파일이다. &lt;br /&gt;
+  unmodified( traceked ) : git에 등록된 파일이지만 수정되지는 않은 상태이다.&lt;br /&gt;
+  modified : 해당 파일이 수정된 상태이다.&lt;br /&gt;
+  staged : Commit 을 할 수 있는 상태이다.&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Git init 으로 git 프로젝트를 만든 후 파일을 하나 만든 상태에서 git status 을 한다면
+&lt;code&gt;nothing added to commit but untracked files present&lt;/code&gt; &lt;br /&gt;
+상태인것을 확인 할 수 있다. 이상태는 해당 파일이 untracked 상태라는 것을 알려주고 git add 명령어를 통해 파일을 unmodified 상태로 바꾸라는 것이다.&lt;br /&gt;
+&amp;gt; git add .  &lt;br /&gt;
+명령어로 tracked 상태로 변경해준다.&lt;/p&gt;
+
+&lt;p&gt;그후에 status를 확인하면&lt;br /&gt;
+&lt;code&gt;Changes to be committed:&lt;/code&gt; &lt;br /&gt;
+상태로 변경 된다. 해당 상태는 커밋하기 위한 상태이다. &lt;br /&gt;
+&amp;gt; git commit -m “first commit”
+커밋을 해준다.
+그후 status을 확인하면 &lt;br /&gt;
+&lt;code&gt;nothing to commit (working directory clean)&lt;/code&gt;
+상태인것을 확인 할 수 있다.!
+&lt;strong&gt;간단히 정리하자면&lt;/strong&gt; &lt;br /&gt;
++ 파일 추가(untracked)
++ git add . (tracked, unmodified)
++ 파일 수정 (modified )
++ git add . (staged)
++ git commit -m “asd” (tracked, unmodified)
+***
+- Nothing to commit -&amp;gt; commit 할게없음 &lt;br /&gt;
+- Untracked files -&amp;gt; 아직 추적되지 않았음( add 해야됨) &lt;br /&gt;
+- Changes to be committed -&amp;gt; Commit 해야됨 &lt;br /&gt;
+- Changes but not update -&amp;gt; add 해야함 ( 한번은 commit 된 상태) &lt;br /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;git-add&quot;&gt;Git add&lt;/h2&gt;
+&lt;p&gt;간단히 git add 명령어는 해당 파일을
+untracked -&amp;gt; tracked 상태로 바꾸거나
+commit 하기 위한 상태 ( staged) 상태로 바꿀 수 있는 명령어 이다.
+git add option 을 넣어서 각 파일의 상태를 변경하는 명령어 이다. &lt;br /&gt;
+&lt;code&gt;git add filename&lt;/code&gt;
+   파일명에 해당 하는 파일을 add 한다.&lt;br /&gt;
+&lt;code&gt;git add *.c&lt;/code&gt;
+   확장자가 c 파일인 모든 파일을 add 한다.&lt;br /&gt;
+&lt;code&gt;git add .&lt;/code&gt;
+   변화된 파일과 추가된 파일 모두를 add 한다.
+(단 삭제된 파일은 add 하지 않는다)
+대부분 add 할때는 이명령어를 자주 사용한다.&lt;br /&gt;
+&lt;code&gt;git add -u &lt;/code&gt;
+   변화된거랑 삭제된 것만 add 한다.
+( 단 추가된 파일은 add 하지 않는다)&lt;br /&gt;
+&lt;code&gt;git add -A&lt;/code&gt;
+ git add . 와 git add - u 를 동시에 실행 한 것과 동일한 명령어 이다. 삭제된 파일이 있을경우 이명령어를 통해 add 를 한다.
+## Git commit
+ git commit 은 git 에 가장 기본이 되는 명령어 이다. git은 commit 단위로 변화를 저장하기 때문에 git commit 은 git add 와 다르게 신경써서 해주는 것이 좋다.
+ 너무 자주 할 경우 commit 이 너무 많아 복잡해 지며 너무 드물게 할경우 commit 된 내용을 잘 알 수 없다. 해당 commit 으로 상태를 돌릴 수 있으므로 어느 특정 작업이 완벽히 완료된 후에 commit 하는 것이 좋겠다. &lt;br /&gt;
+&lt;code&gt;git commit -m &quot;first commit&quot;&lt;/code&gt;
+   first commit 이라는 이름으로 commit 을 수행한다. -m 옵션은 editer를 열지 않고 바로 커밋을 수행한다.&lt;br /&gt;
+&lt;code&gt;git commit -v &quot;second commit&quot;&lt;/code&gt;
+   -v 옵션은 editer 를 열어서 해당 사항을 확인후 커밋할 수 있다.&lt;br /&gt;
+&lt;code&gt;git add -a &quot;third commit&quot;&lt;/code&gt;
+  -a 옵션은 git add 를 수행하지 않아도 바로 add 를 수행후에 commit 을 실행 해준다.
+  -m 옵션과 같이 사용할 할 수 있다. &lt;br /&gt;
+&lt;code&gt;git commit --amend&lt;/code&gt;
+  이전에 add 된 목록들을 이전 commit 에 포함해서 다시 commit 을 수행해준다. &lt;br /&gt;
+## Checkout &amp;amp; Reset
+&lt;code&gt;git reset HEAD readme&lt;/code&gt;
+  모르고 add 해서 Change to be committd 상태가 되었다면 다시 Staged 된 상태를 unStaged 상태로 변경 &lt;br /&gt;
+&lt;code&gt;git checkout --readme&lt;/code&gt;
+  수정된 파일을 Untracked 상태로 변경한다. &lt;br /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    
+
+  </channel> 
+</rss>

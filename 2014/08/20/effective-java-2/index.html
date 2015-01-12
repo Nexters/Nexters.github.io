@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Effective Java 모든 객체에 공통적인 메소드 &mdash; Nexters</title>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/images/logo.png"/>
+    <link href="/feed.xml" rel="alternate" type="application/rss+xml" title="Nexters" />
+    <meta name="title" content="Effective Java 모든 객체에 공통적인 메소드 ">
+    <link rel="canonical" href="http://nexters.github.io/2014/08/20/effective-java-2/">
+    
+    
+    <meta property="og:title" content="Effective Java 모든 객체에 공통적인 메소드 "/>
+    <meta property="og:url" content="http://nexters.github.io/2014/08/20/effective-java-2/"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/apple2-cover.jpg"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/logo.png"/>
+    
+    
+    <meta property="og:description" content="Effective Java 모든 객체에 공통적인 메소드"/>
+    <meta name="description" content="Effective Java 모든 객체에 공통적인 메소드"/>
+    
+    <meta property="og:site_name" content="Nexters">
+</head>
+<body>
+
+<section class="site-nav">
+    <header>
+        <nav id="navigation">
+            <a class="brand" href="/">
+                <img src="/images/logo.png" alt="Inc">
+            </a>
+            <a href="/" class="home">Blog</a>
+            <a href="http://teamnexters.com/product/">Product</a>
+            <a href="http://teamnexters.com/members/">About</a>
+            <a href="http://nexters.github.io/Node-Study/">Node.js</a>
+            <a href="http://rangken.gitbooks.io/nextersstudy1/">C/S Study</a>
+            <a href="http://rangken.gitbooks.io/javastudy/content/chapter2/README.html">Java Study</a>
+        </nav>
+        <nav class="tagline">
+            <span></span>
+            <a href="https://github.com/orgs/Nexters/dashboard" class="btn btn-outline">Team Project</a>
+        </nav>
+    </header>
+</section>
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&appId=187092678165992&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="article-cover">
+    <div class="blog-cover" style="background-image:url(/images/apple2-cover.jpg);">
+      <section>
+        <h1>Effective Java 모든 객체에 공통적인 메소드</h1>
+        <h3>ITEM 8~9</h3>
+        <img src="/images/신문규.jpg" style="width: 64px; height: 64px;">
+      </section>
+    </div>
+</div>
+
+<article>
+
+    <div class="container">
+        <header>
+            <div class="meta">
+                By <address><a rel="author" href="" title="신문규" target="_blank">신문규</a></address> &mdash;
+                <time pubdate datetime="2014-20-August" title="August 20, 2014">August 20, 2014</time>
+            </div>
+            <h1 class="title">Effective Java 모든 객체에 공통적인 메소드</h1>
+            <h2 class="subtitle">ITEM 8~9</h2>
+        </header>
+
+        <section>
+            <h2 id="section">모든 객체에 공통적인 메소드!</h2>
+<ul>
+  <li>Object 클래스는 상속을 목적으로 설계되었다. 이 클래스에는 (equals, hashcode, toString, clone, finalize) 와 같은 메소드들이 Object의 모든 서브 클래스에서 오버라이드하도록 설계되었다.
+이 장에서는 final이 아닌 Object의 메소드들을 언제 어떻게 오버라이드 하는지 알려준다.</li>
+</ul>
+
+<h3 id="item-8-equals-------">Item 8. equals 메소드를 오버라이딩 할 때는 보편적 계약을 따르자.</h3>
+<ul>
+  <li>equals 메소드는 오버라이딩을 하는 과정에서 문제가 발생할 수 있다. 이런 부분을 가장 쉽게 피하는 방법은 상속받은 그대로 사용하는 것이다. 다음 조건 중 어느 하나라도 만족하면 그렇게 하는 것이 좋다.
+    <ul>
+      <li>클래스의 각 인스턴스가 본래부터 유일한 경우</li>
+      <li>두 인스턴스가 논리적으로 같은지 검사하지 않아도 되는 클래스의 경우</li>
+      <li>수퍼 클래스에서 equals 메소드를 이미 오버라이딩 했고, 그 메소드를 그대로 사용해도 좋은 경우</li>
+      <li>private이나 package-private(접근 지시자를 지정하지 않은 경우) 클래스라서 이 클래스의 equals 메소드가 절대 호출되지 않아야 할 경우</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>그렇다면 Object.equals를 언제 오버라이드 해야 좋을까?</strong>
+- 인스턴스가 갖는 값을 비교하여 논리적으로 같은지 판단할 필요가 있는 클래스로써, 자신의 수퍼클래스에서
+equals 메소드를 오버라이드 하지 않았을 경우
+- equals 메소드를 오버라이드 할 때는 이 메소드의 보편적 계약을 따라야 한다. equals 메소드는 equivalence relation 을 구현하며 그것은</p>
+
+<ul>
+  <li><strong>Reflexive</strong> : null이 아닌 모든 참조 값 x에 대해, x.equals(x)는 반드시 true를 반환해야 한다.</li>
+  <li><strong>Symmetric</strong> : null이 아닌 모든 참조 값 x와 y에 대해, y.equals(x)가 true를 반환한다면 x.equals(y)도 반드 시 true를 반환해야 한다.</li>
+  <li><strong>Transitive</strong>: null이 아닌 모든 참조 값 x와 y에 대해, x.equals(y)가 true를 반환하고 y.equals(z)가 true를 반환한다면 x.equals(z)도 true를 반환해야 한다.</li>
+  <li><strong>Consistent</strong>: null이 아닌 모든 참조 값 x와 y에 대해, equals 메소드에서 객체 비교 시 사용하는 정보가 변경되지 않는다면, x.equals(y)를 여러 번 호출하더라도 일관성 있게 true 또는 false를 반환해야 한다.! • null 아닌 모든 참조 값 x에 대해, x.equals(null)은 반드시 false를 반환해야 한다.</li>
+</ul>
+
+<h3 id="item-9-equals-----hashcode-----">Item 9. equals 메소드를 오버라이드 할 때는 hashCode 메소드도 항상 같이 오버라이드 하자.!</h3>
+<ul>
+  <li>hashCode 메소드를 제대로 오버라이드 하지 않아 코드 결함이 생기는 경우가 흔하다. 그렇게 하지 않으면 HashMap과 HashSet 등 모든 해시 기반의 컬렉션들과 우리 클래스를 같이 사용할 때 우리 클래스가 올바르게 동작하지 않을 것이다.</li>
+</ul>
+
+<p>자바 API문서의 주요 사항은 다음과 같다.</p>
+
+<ul>
+  <li>애플리케이션이 실행 중에 같은 객체에 대해 한 번 이상 호출되더라도 hashCode 메소드는 같은 정수를 일관 성 있게 반환해야 한다.</li>
+  <li>equals(Object) 메소드 호출결과 두 객체가 동일하다면, 두 객체 각각에 대해 hashCode 메소드를 호출 했을 때 같은 정수 값이 나와야 한다. (주요 위배사항)</li>
+  <li>equals(Object) 메소드 호출결과 두 객체가 다르다고 해서 두 객체 각각에 대해 hashCode 메소드를 호출 했 !을 때 반드시 다른 정수 값이 나올 필요는 없다.</li>
+</ul>
+
+<p>좋은 해시 메소드는 동일하지 않은 객체들에 대해 서로 다른 해시코드를 만든다. 이상적으로는 동일하지 않은 인 스턴스들에 대해 모든 가능한 해시 값을 고르게 분산시켜주어야 한다.</p>
+
+            
+<div class="social">
+    
+    
+    <div>
+        <div class="fb-like" data-width="150" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+        </section>
+
+        <footer>
+            <address>
+               <img src="/images/신문규.jpg">
+                <p>Written by <strong><a rel="author" href="https://github.com/skylershin" title="" target="_blank">신문규</a></strong><br>
+                <span class="muted">Developer</span>
+                </p>
+            </address>
+
+        </footer>
+
+        <section>
+          <div class="fb-comments" data-href="http://nexters.github.io/2014/08/20/effective-java-2/" data-width="700" data-numposts="5" data-colorscheme="light"></div>
+        </section>
+        
+    </div>
+</article>
+
+
+<footer class="site-footer">
+    <div class="container">
+        &copy; 2015
+
+        <nav>
+            <a href="http://teamnexters.com/">Nexters</a> &middot;
+            <a href="/">Blog</a> &middot;
+            <a href="http://teamnexters.com/product/">Product</a> &middot; 
+            <a href="http://teamnexters.com/members/">About</a>
+        </nav>
+
+        <nav class="social">
+            
+            
+            <a href="http://facebook.com/Nexterspage" title="Follow on Facebook" target="_blank"><i class="icon icon-facebook black"></i></a>
+            
+            <a href="/feed.xml" title="RSS Feed">
+                <i class="icon icon-rss black"></i>
+            </a>
+        </nav>
+    </div>
+</footer>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/main.js">
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=253595308025739";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+</body>
+</html>

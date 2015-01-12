@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORA-01034, ORA-27101 problem &mdash; Nexters</title>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/images/logo.png"/>
+    <link href="/feed.xml" rel="alternate" type="application/rss+xml" title="Nexters" />
+    <meta name="title" content="ORA-01034, ORA-27101 problem ">
+    <link rel="canonical" href="http://nexters.github.io/2014/08/19/oracle_ORA-01034_ORA-27101/">
+    
+    <link rel="author" href="https://plus.google.com/1234">
+    <meta property="og:title" content="ORA-01034, ORA-27101 problem "/>
+    <meta property="og:url" content="http://nexters.github.io/2014/08/19/oracle_ORA-01034_ORA-27101/"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/blog-cover.jpg"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/logo.png"/>
+    
+    
+    <meta property="og:description" content="ORA-01034: ORACLE not available, ORA-27101: shared memory realm does not exist, Linux-x86_64 Error: 2: No such file or directory"/>
+    <meta name="description" content="ORA-01034: ORACLE not available, ORA-27101: shared memory realm does not exist, Linux-x86_64 Error: 2: No such file or directory"/>
+    
+    <meta property="og:site_name" content="Nexters">
+</head>
+<body>
+
+<section class="site-nav">
+    <header>
+        <nav id="navigation">
+            <a class="brand" href="/">
+                <img src="/images/logo.png" alt="Inc">
+            </a>
+            <a href="/" class="home">Blog</a>
+            <a href="http://teamnexters.com/product/">Product</a>
+            <a href="http://teamnexters.com/members/">About</a>
+            <a href="http://nexters.github.io/Node-Study/">Node.js</a>
+            <a href="http://rangken.gitbooks.io/nextersstudy1/">C/S Study</a>
+            <a href="http://rangken.gitbooks.io/javastudy/content/chapter2/README.html">Java Study</a>
+        </nav>
+        <nav class="tagline">
+            <span></span>
+            <a href="https://github.com/orgs/Nexters/dashboard" class="btn btn-outline">Team Project</a>
+        </nav>
+    </header>
+</section>
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&appId=187092678165992&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="article-cover">
+    <div class="blog-cover" style="background-image:url(/images/blog-cover.jpg);">
+      <section>
+        <h1>ORA-01034, ORA-27101 problem</h1>
+        <h3>ORA-01034: ORACLE not available, ORA-27101: shared memory realm does not exist.</h3>
+        <img src="/images/오승목.jpg" style="width: 64px; height: 64px;">
+      </section>
+    </div>
+</div>
+
+<article>
+
+    <div class="container">
+        <header>
+            <div class="meta">
+                By <address><a rel="author" href="" title="오승목" target="_blank">오승목</a></address> &mdash;
+                <time pubdate datetime="2014-19-August" title="August 19, 2014">August 19, 2014</time>
+            </div>
+            <h1 class="title">ORA-01034, ORA-27101 problem</h1>
+            <h2 class="subtitle">ORA-01034: ORACLE not available, ORA-27101: shared memory realm does not exist.</h2>
+        </header>
+
+        <section>
+            <p>오라클 접속이 안된다.</p>
+
+<p>에러메세지를 보면 오라클이 제대로 떠있지 않은 상태다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ORA-01034: ORACLE not available
+ORA-27101: shared memory realm does not exist
+Linux-x86_64 Error: 2: No such file or directory
+01034. <span class="m">00000</span> -  <span class="s2">&quot;ORACLE not available&quot;</span>
+*Cause:    Oracle was not started up. Possible causes include the following
+           - The SGA requires more space than was allocated <span class="k">for</span> it.
+           - The operating-system variable pointing to the instance is
+           improperly defined.
+*Action:   Refer to accompanying messages <span class="k">for</span> possible causes and correct
+           the problem mentioned in the other messages.
+           If Oracle has been initialized, <span class="k">then</span> on some operating systems,
+           verify that Oracle was linked correctly. See the platform
+           specific Oracle documentation.
+Vendor code 1034
+
+Status : Failure -Test failed: ORA-01034: ORACLE not available
+ORA-27101: shared memory realm does not exist
+Linux-x86_64 Error: 2: No such file or directory</code></pre></div>
+
+<p>먼저 TNS리스너 설정을 확인한다.</p>
+
+<p>환경변수 ORACLE_SID를 확인한다.</p>
+
+<p>사용하는 sid가 orcl일 때 다음과 같다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>oracle@fs ~<span class="o">]</span><span class="nv">$ </span><span class="nb">export </span><span class="nv">ORACLE_SID</span><span class="o">=</span>orcl</code></pre></div>
+
+<p>listener.ora 파일을 설정한다.</p>
+
+<p>SID_NAME과 ORACLE_HOME을 자신의 설정과 맞게 변경한다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">SID_LIST_LISTENER</span> <span class="o">=</span>
+  <span class="o">(</span><span class="nv">SID_LIST</span> <span class="o">=</span>
+    <span class="o">(</span><span class="nv">SID_DESC</span> <span class="o">=</span>
+      <span class="o">(</span><span class="nv">SID_NAME</span> <span class="o">=</span> orcl<span class="o">)</span>
+      <span class="o">(</span><span class="nv">ORACLE_HOME</span> <span class="o">=</span> /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1<span class="o">)</span>
+    <span class="o">)</span>
+  <span class="o">)</span></code></pre></div>
+
+<p>ORATAB환경변수를 확인한다.
+기본은 /etc/oratab 이 파일이다.</p>
+
+<p>SID이름:DB경로:Y나N 형식이다.</p>
+
+<p>SID이름이 orcl이고
+DB경로가 /home/oracle/u01/app/oracle/product/11.2.0/dbhome_1 일 때 설정값은 다음과 같다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">orcl:/home/oracle/u01/app/oracle/product/11.2.0/dbhome_1:Y</code></pre></div>
+
+<p>이제 dbstart 스크립트로 오라클을 실행한다!</p>
+
+<p>출처 : </p>
+
+<p><a href="http://www.markhneedham.com/blog/2012/01/26/oracle-dbstart-oracle_home_listner-is-not-set-unable-to-auto-start-oracle-net-listener">http://www.markhneedham.com/blog/2012/01/26/oracle-dbstart-oracle_home_listner-is-not-set-unable-to-auto-start-oracle-net-listener</a></p>
+
+<p><a href="http://totoriver.egloos.com/3104522">http://totoriver.egloos.com/3104522</a></p>
+
+<p>dbstart스크립트 참고.</p>
+
+<ul>
+  <li>나머지 까먹음…</li>
+</ul>
+
+
+            
+<div class="social">
+    
+    
+    <div>
+        <div class="fb-like" data-width="150" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+        </section>
+
+        <footer>
+            <address>
+               <img src="/images/오승목.jpg">
+                <p>Written by <strong><a rel="author" href="https://github.com/" title="" target="_blank">오승목</a></strong><br>
+                <span class="muted">Developer</span>
+                </p>
+            </address>
+
+        </footer>
+
+        <section>
+          <div class="fb-comments" data-href="http://nexters.github.io/2014/08/19/oracle_ORA-01034_ORA-27101/" data-width="700" data-numposts="5" data-colorscheme="light"></div>
+        </section>
+        
+    </div>
+</article>
+
+
+<footer class="site-footer">
+    <div class="container">
+        &copy; 2015
+
+        <nav>
+            <a href="http://teamnexters.com/">Nexters</a> &middot;
+            <a href="/">Blog</a> &middot;
+            <a href="http://teamnexters.com/product/">Product</a> &middot; 
+            <a href="http://teamnexters.com/members/">About</a>
+        </nav>
+
+        <nav class="social">
+            
+            
+            <a href="http://facebook.com/Nexterspage" title="Follow on Facebook" target="_blank"><i class="icon icon-facebook black"></i></a>
+            
+            <a href="/feed.xml" title="RSS Feed">
+                <i class="icon icon-rss black"></i>
+            </a>
+        </nav>
+    </div>
+</footer>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/main.js">
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=253595308025739";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+</body>
+</html>

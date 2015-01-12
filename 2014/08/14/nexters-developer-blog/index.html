@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Stash &mdash; Nexters</title>
+    <link href="https://fonts.googleapis.com/css?family=Droid+Sans:400,700" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="/assets/main.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/images/logo.png"/>
+    <link href="/feed.xml" rel="alternate" type="application/rss+xml" title="Nexters" />
+    <meta name="title" content="Git Stash ">
+    <link rel="canonical" href="http://nexters.github.io/2014/08/14/nexters-developer-blog/">
+    
+    
+    <meta property="og:title" content="Git Stash "/>
+    <meta property="og:url" content="http://nexters.github.io/2014/08/14/nexters-developer-blog/"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/blog-cover.jpg"/>
+    
+    <meta property="og:image" content="http://nexters.github.io/images/logo.png"/>
+    
+    
+    <meta property="og:description" content="Git Stash - 임시 보관하기"/>
+    <meta name="description" content="Git Stash - 임시 보관하기"/>
+    
+    <meta property="og:site_name" content="Nexters">
+</head>
+<body>
+
+<section class="site-nav">
+    <header>
+        <nav id="navigation">
+            <a class="brand" href="/">
+                <img src="/images/logo.png" alt="Inc">
+            </a>
+            <a href="/" class="home">Blog</a>
+            <a href="http://teamnexters.com/product/">Product</a>
+            <a href="http://teamnexters.com/members/">About</a>
+            <a href="http://nexters.github.io/Node-Study/">Node.js</a>
+            <a href="http://rangken.gitbooks.io/nextersstudy1/">C/S Study</a>
+            <a href="http://rangken.gitbooks.io/javastudy/content/chapter2/README.html">Java Study</a>
+        </nav>
+        <nav class="tagline">
+            <span></span>
+            <a href="https://github.com/orgs/Nexters/dashboard" class="btn btn-outline">Team Project</a>
+        </nav>
+    </header>
+</section>
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ko_KR/sdk.js#xfbml=1&appId=187092678165992&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="article-cover">
+    <div class="blog-cover" style="background-image:url(/images/blog-cover.jpg);">
+      <section>
+        <h1>Git Stash</h1>
+        <h3>Git 임시보관하기</h3>
+        <img src="/images/김재영.jpg" style="width: 64px; height: 64px;">
+      </section>
+    </div>
+</div>
+
+<article>
+
+    <div class="container">
+        <header>
+            <div class="meta">
+                By <address><a rel="author" href="" title="Rangen" target="_blank">Rangen</a></address> &mdash;
+                <time pubdate datetime="2014-14-August" title="August 14, 2014">August 14, 2014</time>
+            </div>
+            <h1 class="title">Git Stash</h1>
+            <h2 class="subtitle">Git 임시보관하기</h2>
+        </header>
+
+        <section>
+            <h1 id="git-stash">Git Stash</h1>
+<p><code>$ git stash</code>는 워킹 디렉토리에 <code>Unstaged - git add 는 수행됨</code> 파일들을 백업하고 워킹디렉토리를 <code>HEAD - 이전 커밋</code> 상태로 만드는 명령이다.</p>
+
+<ol>
+  <li>수정중인 상태를 임시 저장해두고 이전 커밋으로 되돌리기 (커밋을 하거나 브랜치를 만들어서 보관할수 있으나 현재 수정중인 상태라서 따로 커밋 브랜치가 애매한상황)</li>
+  <li>현재 브랜치에 작업한 사항을 다른 브랜치로 옮기거나</li>
+</ol>
+
+<p><code>$ git stash</code> - 현재 수정중인 상태에서 이전 HEAD 의 커밋 상태로 돌아감</p>
+
+<p><code>$ git stash pop</code> - Stash로 임시 저장했던 상태로 되돌린다. 저장된 스택중에 가장 위에 있는것 최신에 Push 된 상태로 돌아간다.</p>
+
+<p><code>$ git stash list</code> - 현재 stash(임시 보관)되어진 리스트를 보여줌</p>
+
+<p><code>$ git stash save NAME</code> - 해당 이름으로 git stash 를 수행 (구별하기 위한 메세지를 지정해주는것 이다.)</p>
+
+<p><code>$ git stash apply stash@{0}</code> - Stash 이름들은 기본적으로 stash@{0} stash@{1} stash@{2} 이런식으로 지정된다. 해당 이름으로 상태를 돌릴수있다.</p>
+
+<p><code>$ git stash drop stash@{0}</code> - 저장된 Stash중 해당 이름으로 되어 있는 것을 삭제한다. 생략하면 맨위에 Push 된것을 삭제한다.</p>
+
+<p><code>$ git stash clear</code> - 모든 Stash 리스트 들을 삭제한다.</p>
+
+<h1 id="git-stash-merge">Git Stash Merge</h1>
+<p>Git Stash 가 무조건 임시 보관 상태로 돌리는것이 아니고 해당 파일을 수정후에 Stash 하기 전 상태와 머지를 수행한다.
+Stash 하기전 상태와 Stash한 후에 파일이 Conflict 가 나는 경우가 있을수 있다.</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">error: Your <span class="nb">local </span>changes to the following files would be overwritten by merge:
+  file1
+Please, commit your changes or stash them before you can merge.
+Aborting</code></pre></div>
+
+<p><code>git stash</code> 를 수행한후에 파일을 수정한다음 <code>git stash pop</code> 으로 돌아가려고 할때 Conflict 이 발생한다면 <code>git commit</code> 을 수행한후에
+<code>git stash pop</code> 을 수행한다. 그러면 Conflict 가 발생하고 해당 사항들을 모두 Merge 해주어야 한다.</p>
+
+<h1 id="git-stash--">Git Stash 브랜치 바꾸기</h1>
+<p>가끔 잘못된 브랜치에 작업을 하고 있을 경우가 있다. 작업한 브랜치에 내용을 내가 원하는 브랜치로 적용하고 싶을때 Git stash 를 사용할 수 있다.</p>
+
+<ol>
+  <li>현재 브랜치에서 작업 된 사항을 모두 <code>git add .</code> 를 수행해 Unstaged 상태로 만들어 준다.</li>
+  <li><code>git checkout name</code> 내가 원하는 브랜치로 이동한다.</li>
+  <li><code>git stash pop</code> stash로 저장한 상태로 돌려준다.</li>
+  <li><code>git commit</code> 해당 브랜치에 커밋해준다.</li>
+  <li><code>git checkout master</code> <code>git checkout -- .</code> 추가적으로 master 브랜치의 수정사항을 모두 원상태로 돌려준다. <code>git reset --hard HEAD~1</code>을 수행해
+   주어도 된다. –hard 옵션을 줄경우 모든 수정 내용이 사라질수 있으니 조심해야 한다.</li>
+</ol>
+
+<h1 id="reference">Reference</h1>
+<p><a href="http://wit.nts-corp.com/2014/03/25/1153">JK.Lee</a></p>
+
+            
+<div class="social">
+    
+    
+    <div>
+        <div class="fb-like" data-width="150" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+        </section>
+
+        <footer>
+            <address>
+               <img src="/images/김재영.jpg">
+                <p>Written by <strong><a rel="author" href="https://github.com/rangken" title="" target="_blank">Rangen</a></strong><br>
+                <span class="muted">Developer</span>
+                </p>
+            </address>
+
+        </footer>
+
+        <section>
+          <div class="fb-comments" data-href="http://nexters.github.io/2014/08/14/nexters-developer-blog/" data-width="700" data-numposts="5" data-colorscheme="light"></div>
+        </section>
+        
+    </div>
+</article>
+
+
+<footer class="site-footer">
+    <div class="container">
+        &copy; 2015
+
+        <nav>
+            <a href="http://teamnexters.com/">Nexters</a> &middot;
+            <a href="/">Blog</a> &middot;
+            <a href="http://teamnexters.com/product/">Product</a> &middot; 
+            <a href="http://teamnexters.com/members/">About</a>
+        </nav>
+
+        <nav class="social">
+            
+            
+            <a href="http://facebook.com/Nexterspage" title="Follow on Facebook" target="_blank"><i class="icon icon-facebook black"></i></a>
+            
+            <a href="/feed.xml" title="RSS Feed">
+                <i class="icon icon-rss black"></i>
+            </a>
+        </nav>
+    </div>
+</footer>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/main.js">
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=253595308025739";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+
+
+</body>
+</html>
