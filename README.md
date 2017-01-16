@@ -22,7 +22,7 @@
 
 ## 올리기
 - rake site:generate : html 파일 만들기 
-- rake site:publish : gitgub 에 푸시
+- rake site:publish : github 에 푸시
 - git push origin master : 깃에 푸시
 
 ## Reference
